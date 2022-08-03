@@ -63,6 +63,15 @@ contract Web3RSVP {
             claimedRSVPs,
             false // because at the time of eventCreation, there have been no payouts to the RSVPers (there are none yet) or the event owner yet
         );
+
+        emit NewEventCreated(
+            eventId,
+            msg.sender,
+            eventTimestamp,
+            maxCapacity,
+            deposit,
+            eventDataCID
+        );
     }
 
     function createNewRSVP(bytes32 eventId) external payable {
@@ -90,6 +99,8 @@ contract Web3RSVP {
         }
 
         myEvent.confirmedRSVPs.push(payable(msg.sender));
+
+        emit NewRSVP(eventId, msg.sender);
     }
 
     // part of our app requires users to pay a deposit which they get back when they arrive at the event
@@ -131,6 +142,8 @@ contract Web3RSVP {
         }
 
         require(sent, "Failed to send ether");
+
+        emit ConfirmedAttendee(eventId, attendee);
     }
 
     function confirmAllAttendees(bytes32 eventId) external {
@@ -180,5 +193,7 @@ contract Web3RSVP {
         }
 
         require(sent, "Failed to send ether");
+
+        emit DepositsPaidOut(eventId);
     }
 }
