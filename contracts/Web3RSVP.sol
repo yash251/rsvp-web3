@@ -2,6 +2,21 @@
 pragma solidity ^0.8.4;
 
 contract Web3RSVP {
+    event NewEventCreated(
+        bytes32 eventId,
+        address creatorAddress,
+        uint256 eventTimestamp,
+        uint256 maxCapacity,
+        uint256 deposit,
+        string eventDataCID
+    );
+
+    event NewRSVP(bytes32 eventId, address attendeeAddress);
+
+    event ConfirmedAttendee(bytes32 eventId, address attendeeAddress);
+
+    event DepositsPaidOut(bytes32 eventId);
+
     struct CreateEvent {
         bytes32 eventId;
         string eventDataCID; // reference to an IPFS hash for storing details like the event’s name and event description
