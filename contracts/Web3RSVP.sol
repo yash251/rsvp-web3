@@ -49,4 +49,31 @@ contract Web3RSVP {
             false // because at the time of eventCreation, there have been no payouts to the RSVPers (there are none yet) or the event owner yet
         );
     }
+
+    function createNewRSVP(bytes32 eventId) external payable {
+        // look up event from our mapping
+        CreateEvent storage myEvent = idToEvent[eventId];
+
+        // transfer deposit to our contract / require that they send in enough ETH to cover the deposit requirement of this specific event
+        require(msg.value == myEvent.deposit, "Not enough deposit");
+
+        // require that the event hasn't already happened (<eventTimestamp)
+        require(block.timestamp <= myEvent.eventTimestamp, "Already happened");
+
+        // make sure event is under max capacity
+        require(
+            myEvent.confirmedRSVPs.length < myEvent.maxCapacity,
+            "This event has reached maximum capacity"
+        );
+
+        // require that msg.sender isn't already in myEvent.confirmedRSVPs AKA hasn't already RSVP'd
+        for (uint8 index = 0; index < myEvent.confirmedRSVPs.length; index++) {
+            require(
+                myEvent.confirmedRSVPs[index] != msg.sender,
+                "Already confirmed"
+            );
+        }
+
+        myEvent.confirmedRSVPs.push(payable(msg.sender));
+    }
 }
