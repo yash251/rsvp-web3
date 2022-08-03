@@ -23,26 +23,26 @@ const main = async () => {
     let wait = await txn.wait();
     console.log("New event created:", wait.events[0].event, wait.events[0].args);
     
-    let eventID = wait.events[0].args.eventID;
-    console.log("Event ID:", eventID);
+    let eventId = wait.events[0].args.eventId;
+    console.log("Event ID:", eventId);
 
-    txn = await rsvpContract.createNewRSVP(eventID, { value: deposit });
+    txn = await rsvpContract.createNewRSVP(eventId, { value: deposit });
     wait = await txn.wait();
     console.log("New RSVP:", wait.events[0].event, wait.events[0].args);
 
     txn = await rsvpContract
         .connect(address1)
-        .createNewRSVP(eventID, { value: deposit });
+        .createNewRSVP(eventId, { value: deposit });
     wait = await txn.wait();
     console.log("New RSVP:", wait.events[0].event, wait.events[0].args);
 
     txn = await rsvpContract
         .connect(address2)
-        .createNewRSVP(eventID, { value: deposit });
+        .createNewRSVP(eventId, { value: deposit });
     wait = await txn.wait();
     console.log("New RSVP:", wait.events[0].event, wait.events[0].args);
 
-    txn = await rsvpContract.confirmAllAttendees(eventID);
+    txn = await rsvpContract.confirmAllAttendees(eventId);
     wait = await txn.wait();
     wait.events.forEach((event) =>
         console.log("Confirmed:", event.args.attendeeAddress)
@@ -51,7 +51,7 @@ const main = async () => {
     // wait 10 years
     await hre.network.provider.send("evm_increaseTime", [15778800000000]);
 
-    txn = await rsvpContract.withdrawUnclaimedDeposits(eventID);
+    txn = await rsvpContract.withdrawUnclaimedDeposits(eventId);
     wait = await txn.wait();
     console.log("Withdrawn:", wait.events[0].event, wait.events[0].args);
 };
