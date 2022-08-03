@@ -117,4 +117,17 @@ contract Web3RSVP {
 
         require(sent, "Failed to send ether");
     }
+
+    function confirmAllAttendees(bytes32 eventId) external {
+        // look up event from our struct using the eventId
+        CreateEvent storage myEvent = idToEvent[eventId];
+
+        // require that msg.sender is the owner of the event - only the host should be able to check people in
+        require(msg.sender == myEvent.eventOwner, "Not authorized");
+
+        // confirm each attendee in the rsvp array
+        for (uint8 index = 0; index < myEvent.confirmedRSVPs.length; index++) {
+            confirmAttendee(eventId, myEvent.confirmedRSVPs[index]);
+        }
+    }
 }
