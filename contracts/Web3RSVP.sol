@@ -15,4 +15,38 @@ contract Web3RSVP {
     }
 
     mapping(bytes32 => CreateEvent) public idToEvent;
+
+    function createNewEvent(
+        uint256 eventTimestamp,
+        uint256 deposit,
+        uint256 maxCapacity,
+        string calldata eventDataCID
+    ) external {
+        // generating an eventID
+        bytes32 eventId = keccak256(
+            abi.encodePacked(
+                msg.sender,
+                address(this),
+                eventTimestamp,
+                deposit,
+                maxCapacity
+            )
+        );
+
+        address[] memory confirmedRSVPs;
+        address[] memory claimedRSVPs;
+
+        // this creates a new CreateEvent struct and adds it to the idToEvent mapping
+        idToEvent[eventId] = CreateEvent(
+            eventId,
+            eventDataCID,
+            msg.sender,
+            eventTimestamp,
+            deposit,
+            maxCapacity,
+            confirmedRSVPs,
+            claimedRSVPs,
+            false // because at the time of eventCreation, there have been no payouts to the RSVPers (there are none yet) or the event owner yet
+        );
+    }
 }
