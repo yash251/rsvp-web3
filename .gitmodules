@@ -1,0 +1,3 @@
+[submodule "subgraph-rsvp"]
+	path = subgraph-rsvp
+	url = https://github.com/yash251/rsvp-web3.git
